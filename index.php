@@ -28,8 +28,8 @@ $result = mysqli_query($con, $query);
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card img {
-            height: 300px; /* Tetapkan tinggi tetap untuk poster */
-            object-fit: cover; /* Memastikan gambar menutupi area tanpa mengubah rasio aspek */
+            height: 300px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -37,7 +37,9 @@ $result = mysqli_query($con, $query);
 <body>
     <div class="container mt-4">
         <div class="d-flex justify-content-between mb-4">
-            <a href="add.php" class="btn btn-primary">Tambah Data Baru</a>
+            <?php if ($_SESSION["role"] == "admin"): ?>
+                <a href="add.php" class="btn btn-primary">Tambah Data Baru</a>
+            <?php endif; ?>
             <a href="logout.php" class="btn btn-secondary">Logout</a>
         </div>
         <?php
@@ -47,7 +49,7 @@ $result = mysqli_query($con, $query);
             echo "<div class='alert alert-info'>Anda login sebagai user</div>";
         }
         ?>
-        <h1>Pencarian Anime</h1>
+        <h1>Selamat Datang, <?php echo $_SESSION['name'] ?></h1>
         <form id="searchForm" method="GET" action="index.php" class="form-inline mb-4">
             <input type="text" id="searchInput" name="search" class="form-control mr-2" placeholder="Cari anime..." value="<?php echo htmlspecialchars($search); ?>" />
             <button type="submit" class="btn btn-primary">Cari</button>

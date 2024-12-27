@@ -10,6 +10,8 @@ if (!$row) {
     echo "Data anime tidak ditemukan.";
     exit;
 }
+
+session_start();
 ?>
 
 <html>
@@ -32,8 +34,8 @@ if (!$row) {
         .detail-container .poster img {
             width: 100%;
             height: auto;
-            max-height: 400px; /* Tetapkan tinggi maksimum untuk gambar */
-            object-fit: cover; /* Memastikan gambar menutupi area tanpa mengubah rasio aspek */
+            max-height: 400px;
+            object-fit: cover;
         }
         .detail-container .details {
             flex: 2;
@@ -47,6 +49,13 @@ if (!$row) {
         }
         .details .actions {
             margin-top: 1em;
+        }
+        .details .actions a {
+            margin-right: 1em;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            color: white;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -63,8 +72,10 @@ if (!$row) {
                 <p><strong>Tahun Rilis:</strong> <?php echo $row['release_date']; ?></p>
                 <p><strong>Deskripsi:</strong> <?php echo $row['description']; ?></p>
                 <div class="actions">
-                    <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Edit</a>
-                    <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
+                    <?php if ($_SESSION["role"] == "admin"): ?>
+                        <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Edit</a>
+                        <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">Hapus</a>
+                    <?php endif; ?>
                     <a href="print_anime.php?id=<?php echo $row['id']; ?>" class="btn btn-success">Print</a>
                 </div>
                 <br>

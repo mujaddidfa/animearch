@@ -37,6 +37,7 @@ if ($response_keys["success"]) {
         $_SESSION['iduser'] = $r['id'];
         $_SESSION['passuser'] = $r['password'];
         $_SESSION['role'] = $r['role'];
+        $_SESSION['name'] = $r['name'];
         header('location:index.php');
         exit;
     } else {
