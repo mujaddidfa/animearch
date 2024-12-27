@@ -12,6 +12,22 @@ if (!$row) {
 }
 
 session_start();
+
+$review_result = mysqli_query($con, "SELECT * FROM reviews WHERE anime_id='$id' ORDER BY created_at DESC");
+
+if (isset($_POST['submit_review'])) {
+    $username = $_SESSION['iduser'];
+    $review = $_POST['review'];
+    $created_at = date('Y-m-d H:i:s');
+
+    $insert_review = mysqli_query($con, "INSERT INTO reviews (anime_id, username, review, created_at) VALUES ('$id', '$username', '$review', '$created_at')");
+
+    if ($insert_review) {
+        echo "<script>alert('Review berhasil ditambahkan'); window.location.href='detail.php?id=$id';</script>";
+    } else {
+        echo "<script>alert('Gagal menambahkan review'); window.location.href='detail.php?id=$id';</script>";
+    }
+}
 ?>
 
 <html>
@@ -57,6 +73,16 @@ session_start();
             color: white;
             border-radius: 5px;
         }
+        .review-container {
+            margin-top: 2em;
+        }
+        .review {
+            border-bottom: 1px solid #ccc;
+            padding: 1em 0;
+        }
+        .review:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 
@@ -81,6 +107,26 @@ session_start();
                 <br>
                 <a href="index.php" class="btn btn-secondary">Kembali ke Daftar</a>
             </div>
+        </div>
+        <div class="review-container">
+            <h2>Review</h2>
+            <?php while ($review = mysqli_fetch_assoc($review_result)): ?>
+                <div class="review">
+                    <p><strong><?php echo $review['username']; ?></strong> <small><?php echo $review['created_at']; ?></small></p>
+                    <p><?php echo $review['review']; ?></p>
+                </div>
+            <?php endwhile; ?>
+        </div>
+        <div class="mt-4">
+            <h3>Tambahkan Review</h3>
+            <form method="POST" action="detail.php?id=<?php echo $id; ?>">
+                <div class="form-group">
+                    <textarea name="review" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="submit_review" class="btn btn-primary">Kirim Review</button>
+                </div>
+            </form>
         </div>
     </div>
 </body>
