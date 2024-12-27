@@ -58,15 +58,14 @@ if (isset($_POST['update'])) {
                 // Update data with new poster
                 $result = mysqli_query($con, "UPDATE anime SET title='$title', genre='$genre', release_date='$release_date', description='$description', poster='$poster' WHERE id='$id'");
             } else {
-                echo "Sorry, there was an error uploading your file.";
+                echo "Terdapat kesalahan saat mengupload file.";
                 exit;
             }
         } else {
-            echo "File is not an image.";
+            echo "File yang diupload bukan gambar.";
             exit;
         }
     } else {
-        // Update data without changing poster
         $result = mysqli_query($con, "UPDATE anime SET title='$title', genre='$genre', release_date='$release_date', description='$description' WHERE id='$id'");
     }
 

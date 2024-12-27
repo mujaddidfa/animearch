@@ -14,7 +14,6 @@ if (isset($_POST['Submit'])) {
     $description = $_POST['description'];
     $poster = $_FILES['poster']['name'];
 
-    // Validasi input
     $errors = [];
 
     if (empty($title)) {
@@ -49,7 +48,6 @@ if (isset($_POST['Submit'])) {
     $check = getimagesize($_FILES['poster']['tmp_name']);
     if ($check !== false) {
         if (move_uploaded_file($_FILES['poster']['tmp_name'], $target_file)) {
-            // Insert data into database
             $result = mysqli_query($con, "INSERT INTO anime(title, genre, release_date, description, poster) VALUES('$title', '$genre', '$release_date', '$description', '$poster')");
             
             if ($result) {
@@ -59,10 +57,10 @@ if (isset($_POST['Submit'])) {
                 echo "Error: " . mysqli_error($con);
             }
         } else {
-            echo "Sorry, there was an error uploading your file.";
+            echo "Terdapat kesalahan saat mengupload file.";
         }
     } else {
-        echo "File is not an image.";
+        echo "File yang diupload bukan gambar.";
     }
 }
 ?>

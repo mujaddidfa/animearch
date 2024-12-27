@@ -33,7 +33,7 @@ if (isset($_POST['submit_review'])) {
 <html>
 
 <head>
-    <title>Detail Anime</title>
+    <title>AnimeArch | Detail Anime</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .detail-container {

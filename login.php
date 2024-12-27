@@ -13,7 +13,7 @@ require 'connection.php';
 <html>
 
 <head>
-    <title>AnimeArch - Login</title>
+    <title>AnimeArch | Login</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
@@ -39,7 +39,7 @@ require 'connection.php';
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="text-center">AnimeArch - Login</h3>
+                        <h3 class="text-center">Login</h3>
                     </div>
                     <div class="card-body">
                         <form method="post" action="login_check.php">
