@@ -40,10 +40,8 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 if (count($errors) > 0) {
-    foreach ($errors as $error) {
-        echo "<p>$error</p>";
-    }
-    echo "<a href='registration.php'>Go back</a>";
+    $error_message = implode("\\n", $errors);
+    echo "<script>alert('$error_message'); window.location.href='registration.php';</script>";
     exit;
 }
 
@@ -53,7 +51,7 @@ $sql = "INSERT INTO user(id, password, name, email, role) VALUES ('$id', '$pass'
 $query = mysqli_query($con, $sql);
 
 if ($query) {
-    header('location:login.php');
+    echo "<script>alert('Registrasi berhasil'); window.location.href='login.php';</script>";
 } else {
     echo "Error: " . mysqli_error($con);
 }

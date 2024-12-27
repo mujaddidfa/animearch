@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Registration</title>
+    <title>Registrasi</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('assets/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
     <script>
         function validateForm() {
             var id = document.forms["registrationForm"]["id"].value;
@@ -37,23 +54,68 @@
             }
             return true;
         }
+
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            var checkbox = document.getElementById("showPassword");
+            if (checkbox.checked) {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
     </script>
 </head>
+
 <body>
-    <form name="registrationForm" method="POST" action="input_user.php" onsubmit="return validateForm()">
-        <table>
-            <tr><td>Username</td><td> : <input name='id' type='text'></td></tr>
-            <tr><td>Password</td><td> : <input name='password' type='password'></td></tr>
-            <tr><td>Nama Lengkap</td><td> : <input name='name' type='text'></td></tr>
-            <tr><td>Email </td><td> : <input name='email' type='text'></td></tr>
-            <tr><td>
-                <select name='role'>
-                    <option value='admin'>admin</option>
-                    <option value='user'>user</option>
-                </select>
-            </td></tr>
-            <tr><td colspan=2><input type='submit' value='SIMPAN'></td></tr> 
-        </table> 
-    </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Registrasi</h3>
+                    </div>
+                    <div class="card-body">
+                        <form name="registrationForm" method="POST" action="input_user.php" onsubmit="return validateForm()">
+                            <div class="form-group">
+                                <label for="id">Username</label>
+                                <input name="id" type="text" class="form-control" id="id">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input name="password" type="password" class="form-control" id="password">
+                            </div>
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePasswordVisibility()">
+                                <label class="form-check-label" for="showPassword">Tampilkan Password</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Nama Lengkap</label>
+                                <input name="name" type="text" class="form-control" id="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input name="email" type="text" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Role</label>
+                                <select name="role" class="form-control" id="role">
+                                    <option value="admin">Admin</option>
+                                    <option value="user">User</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">Registrasi</button>
+                            </div>
+                        </form>
+                        <div class="form-group text-center">
+                            <a href="login.php">Sudah punya akun? Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

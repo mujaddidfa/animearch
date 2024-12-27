@@ -40,11 +40,9 @@ if ($response_keys["success"]) {
         header('location:index.php');
         exit;
     } else {
-        echo "<center>Login gagal! username & password tidak benar<br>";
-        echo "<a href=login.php><b>ULANGILAGI</b></a></center>";
+        echo "<script>alert('Login gagal! Username & password tidak benar'); window.location.href='login.php';</script>";
     }
 } else {
-    echo "<center>Login gagal! reCAPTCHA tidak valid<br>";
-    echo "<a href=login.php><b>ULANGILAGI</b></a></center>";
+    echo "<script>alert('Login gagal! reCAPTCHA tidak valid'); window.location.href='login.php';</script>";
 }
 ?>
