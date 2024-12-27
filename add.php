@@ -1,12 +1,11 @@
 <?php
 session_start();
+include_once("connection.php");
 
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
-
-include_once("connection.php");
 
 if (isset($_POST['Submit'])) {
     $title = $_POST['title'];
@@ -15,6 +14,7 @@ if (isset($_POST['Submit'])) {
     $description = $_POST['description'];
     $poster = $_FILES['poster']['name'];
 
+    // Validasi input
     $errors = [];
 
     if (empty($title)) {
@@ -38,10 +38,8 @@ if (isset($_POST['Submit'])) {
     }
 
     if (count($errors) > 0) {
-        foreach ($errors as $error) {
-            echo "<p>$error</p>";
-        }
-        echo "<a href='add.php'>Go back</a>";
+        $error_message = implode("\\n", $errors);
+        echo "<script>alert('$error_message'); window.location.href='add.php';</script>";
         exit;
     }
 
@@ -51,6 +49,7 @@ if (isset($_POST['Submit'])) {
     $check = getimagesize($_FILES['poster']['tmp_name']);
     if ($check !== false) {
         if (move_uploaded_file($_FILES['poster']['tmp_name'], $target_file)) {
+            // Insert data into database
             $result = mysqli_query($con, "INSERT INTO anime(title, genre, release_date, description, poster) VALUES('$title', '$genre', '$release_date', '$description', '$poster')");
             
             if ($result) {
@@ -67,42 +66,57 @@ if (isset($_POST['Submit'])) {
     }
 }
 ?>
+
+<!DOCTYPE html>
 <html>
 
 <head>
-    <title>Tambah data mahasiswa</title>
+    <title>AnimeArch | Tambah Data Anime</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <a href="index.php">Go to Home</a>
-    <br /><br />
-    <form method="POST" action="add.php" enctype="multipart/form-data">
-        <table width="25%" border="0">
-            <tr>
-                <td>Judul</td>
-                <td><input type="text" name="title"></td>
-            </tr>
-            <tr>
-                <td>Genre</td>
-                <td><input type="text" name="genre"></td>
-            </tr>
-            <tr>
-                <td>Tahun Rilis</td>
-                <td><input type="number" name="release_date"></td>
-            </tr>
-            <tr>
-                <td>Deskripsi</td>
-                <td><input type="text" name="description"></td>
-            </tr>
-            <tr>
-                <td>Poster</td>
-                <td><input type="file" name="poster"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" name="Submit" value="Tambah"></td>
-            </tr>
-        </table>
-    </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Tambah Data Anime</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="add.php" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title">Judul</label>
+                                <input type="text" name="title" class="form-control" id="title">
+                            </div>
+                            <div class="form-group">
+                                <label for="genre">Genre</label>
+                                <input type="text" name="genre" class="form-control" id="genre">
+                            </div>
+                            <div class="form-group">
+                                <label for="release_date">Tahun Rilis</label>
+                                <input type="number" name="release_date" class="form-control" id="release_date">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Deskripsi</label>
+                                <textarea name="description" class="form-control" id="description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="poster">Poster</label>
+                                <input type="file" name="poster" class="form-control-file" id="poster">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" name="Submit" class="btn btn-primary btn-block">Tambah</button>
+                            </div>
+                        </form>
+                        <div class="text-center">
+                            <a href="index.php" class="btn btn-secondary">Kembali ke Daftar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

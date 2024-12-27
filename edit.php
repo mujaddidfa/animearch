@@ -1,14 +1,21 @@
 <?php
 session_start();
+include_once("connection.php");
 
 if (!isset($_SESSION["login"])) {
     header("Location: login.php");
     exit;
 }
 
-include_once("connection.php");
-
 $id = $_GET['id'];
+
+$result = mysqli_query($con, "SELECT * FROM anime WHERE id='$id'");
+$row = mysqli_fetch_assoc($result);
+
+if (!$row) {
+    echo "Data anime tidak ditemukan.";
+    exit;
+}
 
 if (isset($_POST['update'])) {
     $title = $_POST['title'];
@@ -36,28 +43,19 @@ if (isset($_POST['update'])) {
     }
 
     if (count($errors) > 0) {
-        foreach ($errors as $error) {
-            echo "<p>$error</p>";
-        }
-        echo "<a href='edit.php?id=$id'>Go back</a>";
+        $error_message = implode("\\n", $errors);
+        echo "<script>alert('$error_message'); window.location.href='edit.php?id=$id';</script>";
         exit;
     }
 
-    $target_dir = "poster/";
-    $target_file = $target_dir . basename($poster);
-
     if (!empty($poster)) {
+        $target_dir = "poster/";
+        $target_file = $target_dir . basename($poster);
+
         $check = getimagesize($_FILES['poster']['tmp_name']);
         if ($check !== false) {
-            $result = mysqli_query($con, "SELECT poster FROM anime WHERE id='$id'");
-            $row = mysqli_fetch_assoc($result);
-            $current_poster = $row['poster'];
-            
-            if (!empty($current_poster) && file_exists($target_dir . $current_poster)) {
-                unlink($target_dir . $current_poster);
-            }
-            
             if (move_uploaded_file($_FILES['poster']['tmp_name'], $target_file)) {
+                // Update data with new poster
                 $result = mysqli_query($con, "UPDATE anime SET title='$title', genre='$genre', release_date='$release_date', description='$description', poster='$poster' WHERE id='$id'");
             } else {
                 echo "Sorry, there was an error uploading your file.";
@@ -68,63 +66,69 @@ if (isset($_POST['update'])) {
             exit;
         }
     } else {
+        // Update data without changing poster
         $result = mysqli_query($con, "UPDATE anime SET title='$title', genre='$genre', release_date='$release_date', description='$description' WHERE id='$id'");
     }
 
     if ($result) {
-        header("Location: index.php");
+        header("Location: detail.php?id=$id");
+        exit();
     } else {
-        echo "Error updating record: " . mysqli_error($con);
+        echo "Error: " . mysqli_error($con);
     }
 }
 ?>
-<?php
 
-$result = mysqli_query($con, "SELECT * FROM anime WHERE id='$id'");
-while ($row = mysqli_fetch_array($result)) {
-    $title = $row['title'];
-    $genre = $row['genre'];
-    $release_date = $row['release_date'];
-    $description = $row['description'];
-    $poster = $row['poster'];
-}
-?>
+<!DOCTYPE html>
 <html>
 
 <head>
-    <title>Edit Data Anime</title>
+    <title>AnimeArch | Edit Data Anime</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <a href="index.php">Go to Home</a>
-    <br /><br />
-    <form method="POST" action="edit.php?id=<?php echo $id; ?>" enctype="multipart/form-data">
-        <table width="25%" border="0">
-            <tr>
-                <td>Judul</td>
-                <td><input type="text" name="title" value="<?php echo $title; ?>"></td>
-            </tr>
-            <tr>
-                <td>Genre</td>
-                <td><input type="text" name="genre" value="<?php echo $genre; ?>"></td>
-            </tr>
-            <tr>
-                <td>Tahun Rilis</td>
-                <td><input type="number" name="release_date" value="<?php echo $release_date; ?>"></td>
-            </tr>
-            <tr>
-                <td>Deskripsi</td>
-                <td><input type="text" name="description" value="<?php echo $description; ?>"></td>
-            </tr>
-            <tr>
-                <td>Poster</td>
-                <td><input type="file" name="poster"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" name="update" value="Update"></td>
-            </tr>
-        </table>
-    </form>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">Edit Data Anime</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="edit.php?id=<?php echo $id; ?>" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title">Judul</label>
+                                <input type="text" name="title" class="form-control" id="title" value="<?php echo $row['title']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="genre">Genre</label>
+                                <input type="text" name="genre" class="form-control" id="genre" value="<?php echo $row['genre']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="release_date">Tahun Rilis</label>
+                                <input type="number" name="release_date" class="form-control" id="release_date" value="<?php echo $row['release_date']; ?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Deskripsi</label>
+                                <textarea name="description" class="form-control" id="description"><?php echo $row['description']; ?></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="poster">Poster</label>
+                                <input type="file" name="poster" class="form-control-file" id="poster">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" name="update" class="btn btn-primary btn-block">Update</button>
+                            </div>
+                        </form>
+                        <div class="text-center">
+                            <a href="index.php" class="btn btn-secondary">Kembali ke Daftar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
