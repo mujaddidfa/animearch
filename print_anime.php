@@ -42,15 +42,15 @@ if (file_exists($poster_path)) {
 
 $pdf->SetFont('Arial', '', 12);
 $pdf->Cell(50, 10, 'ID', 0);
-$pdf->Cell(140, 10, ':' . $row['id'], 0, 1);
+$pdf->Cell(140, 10, ': ' . $row['id'], 0, 1);
 $pdf->Cell(50, 10, 'Judul:', 0);
-$pdf->Cell(140, 10, ':' . $row['title'], 0, 1);
+$pdf->Cell(140, 10, ': ' . $row['title'], 0, 1);
 $pdf->Cell(50, 10, 'Genre:', 0);
-$pdf->Cell(140, 10, ':' . $row['genre'], 0, 1);
+$pdf->Cell(140, 10, ': ' . $row['genre'], 0, 1);
 $pdf->Cell(50, 10, 'Tahun Rilis:', 0);
-$pdf->Cell(140, 10, ':' . $row['release_date'], 0, 1);
+$pdf->Cell(140, 10, ': ' . $row['release_date'], 0, 1);
 $pdf->Cell(50, 10, 'Deskripsi:', 0);
-$pdf->MultiCell(140, 10, ':' . $row['description'], 0);
+$pdf->MultiCell(140, 10, ': ' . $row['description'], 0);
 
 $pdf->Output();
 ?>

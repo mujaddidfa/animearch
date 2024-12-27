@@ -25,49 +25,54 @@ $result = mysqli_query($con, $query);
 
 <head>
     <title>Halaman Utama</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card img {
+            height: 300px; /* Tetapkan tinggi tetap untuk poster */
+            object-fit: cover; /* Memastikan gambar menutupi area tanpa mengubah rasio aspek */
+        }
+    </style>
 </head>
 
 <body>
-    <a href="add.php">Tambah Data Baru</a>
-    <br>
-    <a href="logout.php">Logout</a>
-    <br /><br />
-    <?php
-    if ($_SESSION["role"] == "admin") {
-        echo "anda login sebagai admin";
-    } else if ($_SESSION["role"] == "user") {
-        echo "anda login sebagai user";
-    }
-    ?>
-    <h1>Pencarian Anime</h1>
-    <form id="searchForm" method="GET" action="index.php">
-        <input type="text" id="searchInput" name="search" placeholder="Cari anime..." value="<?php echo htmlspecialchars($search); ?>" />
-        <button type="submit">Cari</button>
-    </form>
-    <div id="result"></div>
-    <table border=1>
-        <tr>
-            <th>ID</th>
-            <th>Judul</th>
-            <th>Genre</th>
-            <th>Tahun Rilis</th>
-            <th>Deskripsi</th>
-            <th>Poster</th>
-            <th>Update</th>
-        </tr>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between mb-4">
+            <a href="add.php" class="btn btn-primary">Tambah Data Baru</a>
+            <a href="logout.php" class="btn btn-secondary">Logout</a>
+        </div>
         <?php
-        while ($row = mysqli_fetch_array($result)) {
-            echo "<tr>";
-            echo "<td>" . $row['id'] . "</td>";
-            echo "<td>" . $row['title'] . "</td>";
-            echo "<td>" . $row['genre'] . "</td>";
-            echo "<td>" . $row['release_date'] . "</td>";
-            echo "<td>" . $row['description'] . "</td>";
-            echo "<td><img src='poster/$row[poster]' width='100'></td>";
-            echo "<td><a href='edit.php?id=$row[id]'>Edit</a> | <a href='delete.php?id=$row[id]'>Delete</a> | <a href='print_anime.php?id=$row[id]'>Print</a></td></tr>";
+        if ($_SESSION["role"] == "admin") {
+            echo "<div class='alert alert-info'>Anda login sebagai admin</div>";
+        } else if ($_SESSION["role"] == "user") {
+            echo "<div class='alert alert-info'>Anda login sebagai user</div>";
         }
         ?>
-    </table>
+        <h1>Pencarian Anime</h1>
+        <form id="searchForm" method="GET" action="index.php" class="form-inline mb-4">
+            <input type="text" id="searchInput" name="search" class="form-control mr-2" placeholder="Cari anime..." value="<?php echo htmlspecialchars($search); ?>" />
+            <button type="submit" class="btn btn-primary">Cari</button>
+        </form>
+        <div class="row">
+            <?php
+            while ($row = mysqli_fetch_array($result)) {
+                echo "<div class='col-md-4 mb-4'>";
+                echo "<div class='card'>";
+                echo "<img src='poster/$row[poster]' class='card-img-top' alt='$row[title]'>";
+                echo "<div class='card-body'>";
+                echo "<h5 class='card-title'>$row[title]</h5>";
+                echo "<p class='card-text'>Genre: $row[genre]</p>";
+                echo "<p class='card-text'>Tahun Rilis: $row[release_date]</p>";
+                echo "<a href='detail.php?id=$row[id]' class='btn btn-primary'>Detail</a>";
+                echo "</div>";
+                echo "</div>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
